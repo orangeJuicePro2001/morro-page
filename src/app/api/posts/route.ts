@@ -13,13 +13,13 @@ if ((await postsRef.limit(1).get()).docs.length === 0) {
       await adminDb.collection('posts').doc().set({ createdAt: new Date() });
     }
     return postsRef;
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error ensuring collection:', error);
     throw new Error('Failed to initialize posts collection');
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const postsRef = await ensureCollection();
     const snapshot = await postsRef
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ data: posts });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching posts:', error);
     
     // 处理特定类型的错误
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
         ...postData,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error creating post:', error);
     
     if (error.code === 7) {
